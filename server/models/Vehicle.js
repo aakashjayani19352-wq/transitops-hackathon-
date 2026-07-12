@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-<<<<<<< HEAD
+
 const vehicleSchema = new mongoose.Schema(
   {
     registrationNumber: {
@@ -38,38 +38,6 @@ const vehicleSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-=======
-const vehicleSchema = new mongoose.Schema({
-  registrationNumber: {
-    type: String,
-    unique: true,
-    required: true
-  },
-  name: {
-    type: String,
-    required: true
-  },
-  type: {
-    type: String,
-    required: true
-  },
-  maxLoadCapacity: {
-    type: Number,
-    required: true
-  },
-  odometer: {
-    type: Number,
-    default: 0
-  },
-  acquisitionCost: {
-    type: Number
-  },
-  status: {
-    type: String,
-    enum: ['Available', 'On Trip', 'In Shop', 'Retired'],
-    default: 'Available'
-  }
-});
->>>>>>> origin/main
+
 
 module.exports = mongoose.model('Vehicle', vehicleSchema);
