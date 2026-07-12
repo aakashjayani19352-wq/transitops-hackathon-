@@ -22,17 +22,35 @@ app.use(limiter);
 app.use(cors());
 app.use(express.json());
 
-// Database connection
+// Database connection for Serverless environments
+let isConnected = false;
+
 const connectDB = async () => {
+  if (isConnected) {
+    console.log('Using existing MongoDB connection');
+    return;
+  }
+  
+  if (!process.env.MONGO_URI) {
+    console.error('MONGO_URI is not defined in environment variables.');
+    return;
+  }
+
   try {
-    await mongoose.connect(process.env.MONGO_URI);
+    const db = await mongoose.connect(process.env.MONGO_URI);
+    isConnected = db.connections[0].readyState === 1;
     console.log('MongoDB Connected...');
   } catch (err) {
     console.error('Database connection error:', err.message);
-    process.exit(1);
+    // Remove process.exit(1) so Vercel doesn't crash permanently
   }
 };
-connectDB();
+
+// Add middleware to ensure DB is connected before handling requests
+app.use(async (req, res, next) => {
+  await connectDB();
+  next();
+});
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
