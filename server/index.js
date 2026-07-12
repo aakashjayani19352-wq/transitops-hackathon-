@@ -41,8 +41,10 @@ connectDB();
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/trips', require('./routes/trips'));
 
-app.use('/api/vehicles', require('./routes/vehicles'));
-app.use('/api/drivers', require('./routes/drivers'));
+// Mount these even if some route files don't exist yet, comment them out with a note
+// NOTE: These routes are assigned to other teammates and will be uncommented once created.
+// app.use('/api/vehicles', require('./routes/vehicles'));
+// app.use('/api/drivers', require('./routes/drivers'));
 app.use('/api/maintenance', require('./routes/maintenance'));
 app.use('/api/fuel', require('./routes/fuel'));
 app.use('/api/dashboard', require('./routes/dashboard'));
