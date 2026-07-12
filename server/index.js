@@ -49,8 +49,13 @@ app.use('/api/dashboard', require('./routes/dashboard'));
 // Global Error Handler
 app.use(errorHandler);
 
-// Server Port
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server started on port ${PORT}`);
-});
+// Server Port (Only listen if not in production/Vercel)
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`Server started on port ${PORT}`);
+  });
+}
+
+// Export for Vercel
+module.exports = app;
