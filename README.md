@@ -327,10 +327,10 @@ This project was collaboratively developed during the **TransitOps Hackathon**.
 
 | Name | Role / Contribution |
 |------|----------------------|
-| **Aakash Jayani** | *To be added* |
-| **Rudra Patel** | *To be added* |
-| **Chandan Shah** | *To be added* |
-| **Krish Chaklasia** | *To be added* |
+| **Aakash Jayani** | *Authorization , Trip Management & Backend Integration* |
+| **Rudra Patel** | *FrontEnd* |
+| **Chandan Shah** | *Backend Database API Developer* |
+| **Krish Chaklasia** | * Maintenance, Fuel/Expense, Dashboard * |
 
 
 # 🤝 Contributing
