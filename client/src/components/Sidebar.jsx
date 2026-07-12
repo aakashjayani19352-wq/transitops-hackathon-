@@ -1,11 +1,11 @@
-import { NavLink, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const NAV = [
-  { to: '/dashboard', label: 'Dashboard', icon: '📊' },
-  { to: '/vehicles',  label: 'Vehicles',  icon: '🚛' },
-  { to: '/drivers',   label: 'Drivers',   icon: '👤' },
-  { to: '/trips',     label: 'Trips',     icon: '🗺️' },
+  { to: "/dashboard", label: "Dashboard", icon: "📊" },
+  { to: "/vehicles", label: "Vehicles", icon: "🚛" },
+  { to: "/drivers", label: "Drivers", icon: "👤" },
+  { to: "/trips", label: "Trips", icon: "🗺️" },
 ];
 
 export default function Sidebar() {
@@ -14,7 +14,7 @@ export default function Sidebar() {
 
   function handleLogout() {
     logout();
-    navigate('/login');
+    navigate("/login");
   }
 
   return (
@@ -29,7 +29,7 @@ export default function Sidebar() {
           <NavLink
             key={to}
             to={to}
-            className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}
+            className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}
           >
             <span className="nav-icon">{icon}</span>
             {label}

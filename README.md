@@ -1,346 +1,89 @@
-# 🚛 TransitOps – Smart Transport Operations Platform
+# TransitOps Hackathon Project 🚀
 
-TransitOps is a full-stack MERN-based fleet and transport management platform built during a hackathon. It helps transport companies efficiently manage vehicles, drivers, trips, maintenance, and operational analytics while enforcing real-world business rules to improve safety, utilization, and operational efficiency.
+Welcome to **TransitOps**, a comprehensive Smart Transport Operations Platform built for the Odoo Hackathon 2026!
 
----
+## 🎥 Video Pitch & Demonstration
+[Watch our Automated UI Demo Video](https://raw.githubusercontent.com/aakashjayani19352-wq/transitops-hackathon-/main/demo_video.webp)
 
-# 📌 Problem Statement
+## 🌟 Overview
+TransitOps is designed to streamline and automate the core operations of fleet management. Our platform handles everything from vehicle maintenance logs and driver assignments to fuel consumption tracking and trip planning. 
 
-Fleet operators often struggle with:
-
-- Manual vehicle allocation
-- Driver scheduling conflicts
-- Vehicle overloading
-- Poor maintenance tracking
-- Limited operational visibility
-- Inefficient fleet utilization
-
-TransitOps solves these challenges by providing a centralized platform to manage fleet operations with automated business rule validation.
+Built with a robust **Node.js/Express** backend and a lightning-fast **React/Vite** frontend, it provides a seamless experience for Fleet Managers, Safety Officers, Drivers, and Financial Analysts.
 
 ---
 
-# ✨ Features
-
-## 🚚 Vehicle Management
-
-- Add, edit, delete vehicles
-- Unique registration number validation
-- Track vehicle status
-  - Available
-  - On Trip
-  - In Shop
-  - Retired
-- Store maximum load capacity
-- Search and filter vehicles
+## 🛠️ Tech Stack
+- **Frontend**: React, Vite, Tailwind CSS (via external UI library), Context API
+- **Backend**: Node.js, Express, Mongoose
+- **Database**: MongoDB Atlas
+- **Authentication**: JWT (JSON Web Tokens), Bcrypt for password hashing
+- **Deployment**: Vercel
 
 ---
 
-## 👨‍✈️ Driver Management
+## 📁 Project Structure
+The repository is split into two main architectures to ensure clear separation of concerns:
 
-- Register drivers
-- Track driving license expiry
-- Manage driver availability
-- Driver status management
-  - Available
-  - On Trip
-  - Off Duty
-  - Suspended
+### `client/` (Frontend)
+- `src/components/`: Reusable React UI components (Sidebar, Layout).
+- `src/pages/`: Main application views (Dashboard, Vehicles, Trips, Drivers, Login, Signup).
+- `src/context/`: Global state management for authentication.
+- `src/api/`: Centralized Axios configuration and HTTP interceptors.
 
----
-
-## 🛣️ Trip Management
-
-### Business Rules
-
-- Vehicle must be available
-- Driver must be available
-- Cargo weight cannot exceed vehicle capacity
-- Prevent duplicate vehicle assignment
-- Prevent duplicate driver assignment
-
-### Trip Lifecycle
-
-- Create Trip
-- Dispatch Trip
-- Complete Trip
-- Cancel Trip
-
-Automatic status synchronization:
-
-| Action | Vehicle | Driver |
-|---------|----------|---------|
-| Dispatch | On Trip | On Trip |
-| Complete | Available | Available |
-| Cancel | Available | Available |
+### `server/` (Backend)
+- `controllers/`: Core business logic for endpoints.
+- `models/`: Mongoose schemas defining our database structures.
+- `routes/`: Express route definitions.
+- `validations/`: Joi validation schemas ensuring data integrity.
+- `middleware/`: JWT authentication and error handling intercepts.
 
 ---
 
-## 🔧 Maintenance Management
+## 🚀 Getting Started Locally
 
-- Create maintenance logs
-- Close maintenance logs
-- Automatically update vehicle status
-- Maintain maintenance history
+### Prerequisites
+- Node.js (v18+)
+- MongoDB connection string
 
-Vehicle status changes:
-
-- Available → In Shop
-- In Shop → Available
-
----
-
-## ⛽ Fuel & Expense Tracking
-
-- Record fuel logs
-- Record operational expenses
-- Vehicle-wise expense history
-
----
-
-## 📊 Dashboard
-
-Real-time operational KPIs including:
-
-- Total Vehicles
-- Active Vehicles
-- Available Vehicles
-- Vehicles In Maintenance
-- Total Drivers
-- Drivers Available
-- Drivers On Trip
-- Active Trips
-- Pending Trips
-- Completed Trips
-
----
-
-## 🔐 Authentication & Authorization
-
-Secure authentication using JWT.
-
-### Supported Roles
-
-- Fleet Manager
-- Driver
-- Safety Officer
-- Financial Analyst
-
-Role-based access ensures users only access relevant features.
-
----
-
-# 🏗️ Tech Stack
-
-## Frontend
-
-- React
-- Vite
-- JavaScript
-- HTML5
-- CSS3
-
-## Backend
-
-- Node.js
-- Express.js
-
-## Database
-
-- MongoDB
-- Mongoose
-
-## Authentication
-
-- JWT
-- bcryptjs
-
----
-
-# 📂 Project Structure
-
-```
-TransitOps
-│
-├── client
-│   ├── src
-│   ├── public
-│   └── package.json
-│
-├── server
-│   ├── config
-│   ├── controllers
-│   ├── middleware
-│   ├── models
-│   ├── routes
-│   ├── utils
-│   └── server.js
-│
-├── README.md
-└── .gitignore
-```
-
----
-
-# ⚙️ Installation
-
-## Clone Repository
-
+### 1. Clone the repository
 ```bash
-git clone https://github.com/<your-repository>.git
-
+git clone https://github.com/aakashjayani19352-wq/transitops-hackathon-.git
 cd transitops-hackathon-
 ```
 
----
-
-## Backend Setup
-
+### 2. Backend Setup
 ```bash
 cd server
-
 npm install
-
+```
+Create a `.env` file in the root of the project with:
+```
+MONGO_URI=your_mongodb_connection_string
+PORT=5000
+JWT_SECRET=supersecretkey
+```
+Start the server:
+```bash
 npm run dev
 ```
 
----
-
-## Frontend Setup
-
+### 3. Frontend Setup
 ```bash
 cd client
-
 npm install
-
 npm run dev
 ```
+Open `http://localhost:5173` in your browser.
 
 ---
 
-# 🌐 Environment Variables
+## 🛡️ Security & Validations
+- Passwords are automatically hashed via Mongoose pre-save hooks.
+- All incoming requests are validated against strict `Joi` schemas before hitting the database.
+- Protected routes require a Bearer token issued during Login.
 
-Create a `.env` file inside the `server` directory.
-
-```env
-PORT=5000
-
-MONGO_URI=mongodb://localhost:27017/transitops
-
-JWT_SECRET=your_secret_key
-```
-
----
-
-# 🔄 System Workflow
-
-```
-Vehicle Available
-        │
-        ▼
-Driver Available
-        │
-        ▼
-Create Trip
-        │
-        ▼
-Validate Vehicle Capacity
-        │
-        ▼
-Dispatch Trip
-        │
-        ├──────────────┐
-        ▼              ▼
-Vehicle On Trip   Driver On Trip
-        │              │
-        └──────┬───────┘
-               ▼
-        Complete Trip
-               │
-               ▼
-Vehicle Available
-Driver Available
-```
-
----
-
-# ✅ Business Rules
-
-### Vehicle Rules
-
-- Registration number must be unique.
-- Vehicle cannot carry cargo exceeding its maximum load capacity.
-- Vehicles under maintenance cannot be dispatched.
-- Retired vehicles cannot be assigned to trips.
-
-### Driver Rules
-
-- Driver must be available before trip assignment.
-- A driver cannot be assigned to multiple active trips.
-- License validity can be checked before dispatch.
-
-### Trip Rules
-
-- Driver and vehicle availability are verified before dispatch.
-- Cargo weight validation is enforced.
-- Vehicle and driver statuses are automatically synchronized.
-
-### Maintenance Rules
-
-- Creating a maintenance log sets the vehicle status to **In Shop**.
-- Closing a maintenance log restores the vehicle to **Available**.
-
----
-
-# 🧪 Testing
-
-Sample verification workflow:
-
-1. Add 2–3 vehicles.
-2. Add 2–3 drivers.
-3. Create a trip.
-4. Dispatch the trip.
-5. Verify vehicle and driver statuses.
-6. Complete the trip.
-7. Confirm dashboard KPI updates.
-8. Create a maintenance log.
-9. Verify vehicle enters **In Shop**.
-10. Close maintenance log and confirm vehicle becomes **Available**.
-
----
-
-# 🚀 Future Enhancements
-
-- Live GPS Tracking
-- Route Optimization
-- AI-powered Fleet Analytics
-- Predictive Maintenance
-- Fuel Consumption Analytics
-- Driver Performance Dashboard
-- Notification System
-- Mobile Application
-- Google Maps Integration
-- Reports & Export Functionality
-
-# 👥 Contributors
-
-This project was collaboratively developed during the **TransitOps Hackathon**.
-
-| Name | Role / Contribution |
-|------|----------------------|
-| **Aakash Jayani** | *Authorization , Trip Management & Backend Integration* |
-| **Rudra Patel** | *FrontEnd* |
-| **Chandan Shah** | *Backend Database API Developer* |
-| **Krish Chaklasia** | * Maintenance, Fuel/Expense, Dashboard * |
-
-
-# 🤝 Contributing
-
-Contributions are welcome.
-
-# 📜 License
-
-This project was developed for educational and hackathon purposes.
-
----
-
-## ⭐ If you found this project useful, consider giving the repository a star!
+## 👥 Contributors
+- Aakash Jayani (Team Leader)
+- Krish Chaklasia
+- Chandan Shah
+- Rudra Patel

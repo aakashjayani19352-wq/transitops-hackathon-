@@ -1,8 +1,11 @@
-const Trip = require('../models/Trip');
-const { createTripSchema, completeTripSchema } = require('../validations/tripValidation');
+const Trip = require("../models/Trip");
+const {
+  createTripSchema,
+  completeTripSchema,
+} = require("../validations/tripValidation");
 
 const getModel = (modelName) => {
-  const mongoose = require('mongoose');
+  const mongoose = require("mongoose");
   try {
     return mongoose.model(modelName);
   } catch (e) {
@@ -18,19 +21,20 @@ const createTrip = async (req, res) => {
     throw err;
   }
 
-  const { source, destination, vehicle, driver, cargoWeight, plannedDistance } = req.body;
-  
-  const Vehicle = getModel('Vehicle');
+  const { source, destination, vehicle, driver, cargoWeight, plannedDistance } =
+    req.body;
+
+  const Vehicle = getModel("Vehicle");
   const vehicleDoc = await Vehicle.findById(vehicle);
-  
+
   if (!vehicleDoc) {
-    const err = new Error('Vehicle not found');
+    const err = new Error("Vehicle not found");
     err.statusCode = 404;
     throw err;
   }
 
   if (cargoWeight > vehicleDoc.maxLoadCapacity) {
-    const err = new Error('Cargo weight exceeds vehicle max load capacity');
+    const err = new Error("Cargo weight exceeds vehicle max load capacity");
     err.statusCode = 400;
     throw err;
   }
@@ -42,7 +46,7 @@ const createTrip = async (req, res) => {
     driver,
     cargoWeight,
     plannedDistance,
-    status: 'Draft'
+    status: "Draft",
   });
 
   await trip.save();
@@ -52,50 +56,53 @@ const createTrip = async (req, res) => {
 const dispatchTrip = async (req, res) => {
   const trip = await Trip.findById(req.params.id);
   if (!trip) {
-    const err = new Error('Trip not found');
+    const err = new Error("Trip not found");
     err.statusCode = 404;
     throw err;
   }
 
-  const Vehicle = getModel('Vehicle');
-  const Driver = getModel('Driver');
+  const Vehicle = getModel("Vehicle");
+  const Driver = getModel("Driver");
 
   const vehicleDoc = await Vehicle.findById(trip.vehicle);
   const driverDoc = await Driver.findById(trip.driver);
 
   if (!vehicleDoc || !driverDoc) {
-    const err = new Error('Vehicle or Driver not found');
+    const err = new Error("Vehicle or Driver not found");
     err.statusCode = 404;
     throw err;
   }
 
-  if (vehicleDoc.status !== 'Available') {
-    const err = new Error('Vehicle is not available');
+  if (vehicleDoc.status !== "Available") {
+    const err = new Error("Vehicle is not available");
     err.statusCode = 400;
     throw err;
   }
 
-  if (driverDoc.status !== 'Available') {
-    const err = new Error('Driver is not available');
+  if (driverDoc.status !== "Available") {
+    const err = new Error("Driver is not available");
     err.statusCode = 400;
     throw err;
   }
 
-  if (driverDoc.status === 'Suspended') {
-    const err = new Error('Driver is suspended');
+  if (driverDoc.status === "Suspended") {
+    const err = new Error("Driver is suspended");
     err.statusCode = 400;
     throw err;
   }
 
-  if (driverDoc.licenseExpiryDate && new Date(driverDoc.licenseExpiryDate) < new Date()) {
-    const err = new Error('Driver license has expired');
+  if (
+    driverDoc.licenseExpiryDate &&
+    new Date(driverDoc.licenseExpiryDate) < new Date()
+  ) {
+    const err = new Error("Driver license has expired");
     err.statusCode = 400;
     throw err;
   }
 
-  trip.status = 'Dispatched';
-  vehicleDoc.status = 'On Trip';
-  driverDoc.status = 'On Trip';
+  trip.status = "Dispatched";
+  vehicleDoc.status = "On Trip";
+  driverDoc.status = "On Trip";
 
   await trip.save();
   await vehicleDoc.save();
@@ -113,31 +120,31 @@ const completeTrip = async (req, res) => {
   }
 
   const { actualDistance, fuelConsumed } = req.body;
-  
+
   const trip = await Trip.findById(req.params.id);
   if (!trip) {
-    const err = new Error('Trip not found');
+    const err = new Error("Trip not found");
     err.statusCode = 404;
     throw err;
   }
 
-  const Vehicle = getModel('Vehicle');
-  const Driver = getModel('Driver');
+  const Vehicle = getModel("Vehicle");
+  const Driver = getModel("Driver");
 
   const vehicleDoc = await Vehicle.findById(trip.vehicle);
   const driverDoc = await Driver.findById(trip.driver);
 
   trip.actualDistance = actualDistance;
   trip.fuelConsumed = fuelConsumed;
-  trip.status = 'Completed';
-  
+  trip.status = "Completed";
+
   if (vehicleDoc) {
-    vehicleDoc.status = 'Available';
+    vehicleDoc.status = "Available";
     await vehicleDoc.save();
   }
-  
+
   if (driverDoc) {
-    driverDoc.status = 'Available';
+    driverDoc.status = "Available";
     await driverDoc.save();
   }
 
@@ -148,32 +155,32 @@ const completeTrip = async (req, res) => {
 const cancelTrip = async (req, res) => {
   const trip = await Trip.findById(req.params.id);
   if (!trip) {
-    const err = new Error('Trip not found');
+    const err = new Error("Trip not found");
     err.statusCode = 404;
     throw err;
   }
 
-  if (trip.status !== 'Dispatched') {
-    const err = new Error('Only dispatched trips can be cancelled');
+  if (trip.status !== "Dispatched") {
+    const err = new Error("Only dispatched trips can be cancelled");
     err.statusCode = 400;
     throw err;
   }
 
-  const Vehicle = getModel('Vehicle');
-  const Driver = getModel('Driver');
+  const Vehicle = getModel("Vehicle");
+  const Driver = getModel("Driver");
 
   const vehicleDoc = await Vehicle.findById(trip.vehicle);
   const driverDoc = await Driver.findById(trip.driver);
 
-  trip.status = 'Cancelled';
-  
+  trip.status = "Cancelled";
+
   if (vehicleDoc) {
-    vehicleDoc.status = 'Available';
+    vehicleDoc.status = "Available";
     await vehicleDoc.save();
   }
-  
+
   if (driverDoc) {
-    driverDoc.status = 'Available';
+    driverDoc.status = "Available";
     await driverDoc.save();
   }
 
@@ -182,13 +189,19 @@ const cancelTrip = async (req, res) => {
 };
 
 const getTrips = async (req, res) => {
-  getModel('Vehicle');
-  getModel('Driver');
+  getModel("Vehicle");
+  getModel("Driver");
 
   const trips = await Trip.find()
-    .populate('vehicle', 'name')
-    .populate('driver', 'name');
+    .populate("vehicle", "name")
+    .populate("driver", "name");
   res.json(trips);
 };
 
-module.exports = { createTrip, dispatchTrip, completeTrip, cancelTrip, getTrips };
+module.exports = {
+  createTrip,
+  dispatchTrip,
+  completeTrip,
+  cancelTrip,
+  getTrips,
+};

@@ -1,60 +1,67 @@
-import { useState, useEffect } from 'react';
-import api from '../api/axios';
+import { useState, useEffect } from "react";
+import api from "../api/axios";
 
 const EMPTY_FORM = {
-  registrationNumber: '',
-  name: '',
-  type: '',
-  maxLoadCapacity: '',
-  odometer: '',
-  acquisitionCost: '',
-  status: 'Available',
+  registrationNumber: "",
+  name: "",
+  type: "",
+  maxLoadCapacity: "",
+  odometer: "",
+  acquisitionCost: "",
+  status: "Available",
 };
 
-const VEHICLE_TYPES = ['Truck', 'Van', 'Bus', 'Motorcycle', 'Car', 'Other'];
-const STATUSES = ['Available', 'Active', 'Maintenance', 'Inactive'];
+const VEHICLE_TYPES = ["Truck", "Van", "Bus", "Motorcycle", "Car", "Other"];
+const STATUSES = ["Available", "Active", "Maintenance", "Inactive"];
 
-function statusBadge(s = '') {
-  const map = { available: 'badge-available', active: 'badge-active', maintenance: 'badge-maintenance', inactive: 'badge-inactive' };
-  return `badge ${map[s.toLowerCase()] || 'badge-draft'}`;
+function statusBadge(s = "") {
+  const map = {
+    available: "badge-available",
+    active: "badge-active",
+    maintenance: "badge-maintenance",
+    inactive: "badge-inactive",
+  };
+  return `badge ${map[s.toLowerCase()] || "badge-draft"}`;
 }
 
 export default function Vehicles() {
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [form, setForm] = useState(EMPTY_FORM);
   const [submitting, setSubmitting] = useState(false);
   const [showForm, setShowForm] = useState(false);
 
   async function fetchVehicles() {
     try {
-      const { data } = await api.get('/vehicles');
+      const { data } = await api.get("/vehicles");
       setVehicles(Array.isArray(data) ? data : data.vehicles || []);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to load vehicles.');
+      setError(err.response?.data?.message || "Failed to load vehicles.");
     } finally {
       setLoading(false);
     }
   }
 
-  useEffect(() => { fetchVehicles(); }, []);
+  useEffect(() => {
+    fetchVehicles();
+  }, []);
 
   function handleChange(e) {
-    setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
     setSubmitting(true);
-    setError('');
+    setError("");
     try {
-      await api.post('/vehicles', form);
+      await api.post("/vehicles", form);
       setForm(EMPTY_FORM);
       setShowForm(false);
       await fetchVehicles();
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to add vehicle.');
+      setError(err.response?.data?.message || "Failed to add vehicle.");
     } finally {
       setSubmitting(false);
     }
@@ -67,8 +74,11 @@ export default function Vehicles() {
           <h1>Vehicles</h1>
           <p>Manage your fleet vehicles</p>
         </div>
-        <button className="btn btn-primary" onClick={() => setShowForm(v => !v)}>
-          {showForm ? '✕ Cancel' : '+ Add Vehicle'}
+        <button
+          className="btn btn-primary"
+          onClick={() => setShowForm((v) => !v)}
+        >
+          {showForm ? "✕ Cancel" : "+ Add Vehicle"}
         </button>
       </div>
 
@@ -81,41 +91,88 @@ export default function Vehicles() {
             <div className="form-grid">
               <div className="form-group">
                 <label>Registration Number</label>
-                <input name="registrationNumber" value={form.registrationNumber} onChange={handleChange} placeholder="e.g. KA-01-AB-1234" required />
+                <input
+                  name="registrationNumber"
+                  value={form.registrationNumber}
+                  onChange={handleChange}
+                  placeholder="e.g. KA-01-AB-1234"
+                  required
+                />
               </div>
               <div className="form-group">
                 <label>Vehicle Name</label>
-                <input name="name" value={form.name} onChange={handleChange} placeholder="e.g. Tata Ace" required />
+                <input
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
+                  placeholder="e.g. Tata Ace"
+                  required
+                />
               </div>
               <div className="form-group">
                 <label>Type</label>
-                <select name="type" value={form.type} onChange={handleChange} required>
+                <select
+                  name="type"
+                  value={form.type}
+                  onChange={handleChange}
+                  required
+                >
                   <option value="">Select type</option>
-                  {VEHICLE_TYPES.map(t => <option key={t}>{t}</option>)}
+                  {VEHICLE_TYPES.map((t) => (
+                    <option key={t}>{t}</option>
+                  ))}
                 </select>
               </div>
               <div className="form-group">
                 <label>Max Load Capacity (kg)</label>
-                <input name="maxLoadCapacity" type="number" value={form.maxLoadCapacity} onChange={handleChange} placeholder="e.g. 5000" />
+                <input
+                  name="maxLoadCapacity"
+                  type="number"
+                  value={form.maxLoadCapacity}
+                  onChange={handleChange}
+                  placeholder="e.g. 5000"
+                />
               </div>
               <div className="form-group">
                 <label>Odometer (km)</label>
-                <input name="odometer" type="number" value={form.odometer} onChange={handleChange} placeholder="e.g. 12000" />
+                <input
+                  name="odometer"
+                  type="number"
+                  value={form.odometer}
+                  onChange={handleChange}
+                  placeholder="e.g. 12000"
+                />
               </div>
               <div className="form-group">
                 <label>Acquisition Cost (₹)</label>
-                <input name="acquisitionCost" type="number" value={form.acquisitionCost} onChange={handleChange} placeholder="e.g. 800000" />
+                <input
+                  name="acquisitionCost"
+                  type="number"
+                  value={form.acquisitionCost}
+                  onChange={handleChange}
+                  placeholder="e.g. 800000"
+                />
               </div>
               <div className="form-group">
                 <label>Status</label>
-                <select name="status" value={form.status} onChange={handleChange}>
-                  {STATUSES.map(s => <option key={s}>{s}</option>)}
+                <select
+                  name="status"
+                  value={form.status}
+                  onChange={handleChange}
+                >
+                  {STATUSES.map((s) => (
+                    <option key={s}>{s}</option>
+                  ))}
                 </select>
               </div>
             </div>
             <div className="form-actions">
-              <button type="submit" className="btn btn-primary" disabled={submitting}>
-                {submitting ? 'Adding…' : 'Add Vehicle'}
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={submitting}
+              >
+                {submitting ? "Adding…" : "Add Vehicle"}
               </button>
             </div>
           </form>
@@ -124,7 +181,9 @@ export default function Vehicles() {
 
       <div className="table-wrap">
         {loading ? (
-          <div className="loader"><div className="spinner"></div> Loading…</div>
+          <div className="loader">
+            <div className="spinner"></div> Loading…
+          </div>
         ) : vehicles.length === 0 ? (
           <div className="empty">No vehicles found. Add one above.</div>
         ) : (
@@ -142,12 +201,16 @@ export default function Vehicles() {
             <tbody>
               {vehicles.map((v, i) => (
                 <tr key={v._id || i}>
-                  <td><strong>{v.registrationNumber}</strong></td>
+                  <td>
+                    <strong>{v.registrationNumber}</strong>
+                  </td>
                   <td>{v.name}</td>
                   <td>{v.type}</td>
-                  <td>{v.maxLoadCapacity ? `${v.maxLoadCapacity} kg` : '—'}</td>
-                  <td>{v.odometer ? `${v.odometer} km` : '—'}</td>
-                  <td><span className={statusBadge(v.status)}>{v.status}</span></td>
+                  <td>{v.maxLoadCapacity ? `${v.maxLoadCapacity} kg` : "—"}</td>
+                  <td>{v.odometer ? `${v.odometer} km` : "—"}</td>
+                  <td>
+                    <span className={statusBadge(v.status)}>{v.status}</span>
+                  </td>
                 </tr>
               ))}
             </tbody>

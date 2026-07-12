@@ -1,7 +1,7 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const { signupSchema, loginSchema } = require('../validations/authValidation');
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const User = require("../models/User");
+const { signupSchema, loginSchema } = require("../validations/authValidation");
 
 const signup = async (req, res) => {
   const { error } = signupSchema.validate(req.body);
@@ -15,7 +15,7 @@ const signup = async (req, res) => {
 
   let user = await User.findOne({ email });
   if (user) {
-    const err = new Error('User already exists');
+    const err = new Error("User already exists");
     err.statusCode = 400;
     throw err;
   }
@@ -30,11 +30,11 @@ const signup = async (req, res) => {
   const payload = {
     user: {
       id: user.id,
-      role: user.role
-    }
+      role: user.role,
+    },
   };
 
-  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '5h' });
+  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "5h" });
   res.status(201).json({ token });
 };
 
@@ -50,14 +50,14 @@ const login = async (req, res) => {
 
   let user = await User.findOne({ email });
   if (!user) {
-    const err = new Error('Invalid credentials');
+    const err = new Error("Invalid credentials");
     err.statusCode = 400;
     throw err;
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    const err = new Error('Invalid credentials');
+    const err = new Error("Invalid credentials");
     err.statusCode = 400;
     throw err;
   }
@@ -65,15 +65,15 @@ const login = async (req, res) => {
   const payload = {
     user: {
       id: user.id,
-      role: user.role
-    }
+      role: user.role,
+    },
   };
 
-  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '5h' });
-  
+  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "5h" });
+
   const userInfo = { ...user._doc };
   delete userInfo.password;
-  
+
   res.json({ token, user: userInfo });
 };
 

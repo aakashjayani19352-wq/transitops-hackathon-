@@ -1,11 +1,11 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Vehicle = require('../models/Vehicle');
-const Trip = require('../models/Trip');
-const Driver = require('../models/Driver');
+const Vehicle = require("../models/Vehicle");
+const Trip = require("../models/Trip");
+const Driver = require("../models/Driver");
 
 // GET / - Dashboard summary counts
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const [
       activeVehicles,
@@ -13,14 +13,14 @@ router.get('/', async (req, res) => {
       vehiclesInMaintenance,
       activeTrips,
       pendingTrips,
-      driversOnDuty
+      driversOnDuty,
     ] = await Promise.all([
-      Vehicle.countDocuments({ status: { $ne: 'Retired' } }),
-      Vehicle.countDocuments({ status: 'Available' }),
-      Vehicle.countDocuments({ status: 'In Shop' }),
-      Trip.countDocuments({ status: 'Dispatched' }),
-      Trip.countDocuments({ status: 'Draft' }),
-      Driver.countDocuments({ status: 'On Trip' })
+      Vehicle.countDocuments({ status: { $ne: "Retired" } }),
+      Vehicle.countDocuments({ status: "Available" }),
+      Vehicle.countDocuments({ status: "In Shop" }),
+      Trip.countDocuments({ status: "Dispatched" }),
+      Trip.countDocuments({ status: "Draft" }),
+      Driver.countDocuments({ status: "On Trip" }),
     ]);
 
     res.json({
@@ -29,7 +29,7 @@ router.get('/', async (req, res) => {
       vehiclesInMaintenance,
       activeTrips,
       pendingTrips,
-      driversOnDuty
+      driversOnDuty,
     });
   } catch (err) {
     res.status(500).json({ error: err.message });

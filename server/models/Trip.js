@@ -1,47 +1,47 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const tripSchema = new mongoose.Schema({
   source: {
     type: String,
-    required: true
+    required: true,
   },
   destination: {
     type: String,
-    required: true
+    required: true,
   },
   vehicle: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Vehicle',
-    required: true
+    ref: "Vehicle",
+    required: true,
   },
   driver: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Driver',
-    required: true
+    ref: "Driver",
+    required: true,
   },
   cargoWeight: {
     type: Number,
-    required: true
+    required: true,
   },
   plannedDistance: {
     type: Number,
-    required: true
+    required: true,
   },
   actualDistance: {
-    type: Number
+    type: Number,
   },
   fuelConsumed: {
-    type: Number
+    type: Number,
   },
   status: {
     type: String,
-    enum: ['Draft', 'Dispatched', 'Completed', 'Cancelled'],
-    default: 'Draft'
+    enum: ["Draft", "Dispatched", "Completed", "Cancelled"],
+    default: "Draft",
   },
   createdAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
-module.exports = mongoose.model('Trip', tripSchema);
+module.exports = mongoose.model("Trip", tripSchema);
