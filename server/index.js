@@ -45,10 +45,9 @@ app.use('/api/trips', require('./routes/trips'));
 // NOTE: These routes are assigned to other teammates and will be uncommented once created.
 // app.use('/api/vehicles', require('./routes/vehicles'));
 // app.use('/api/drivers', require('./routes/drivers'));
-// app.use('/api/maintenance', require('./routes/maintenance'));
-// app.use('/api/fuel', require('./routes/fuel'));
-// app.use('/api/expenses', require('./routes/expenses'));
-// app.use('/api/dashboard', require('./routes/dashboard'));
+app.use('/api/maintenance', require('./routes/maintenance'));
+app.use('/api/fuel', require('./routes/fuel'));
+app.use('/api/dashboard', require('./routes/dashboard'));
 
 // Global Error Handler
 app.use(errorHandler);
